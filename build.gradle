@@ -18,8 +18,8 @@ buildscript {
 }
 
 repositories {
-    maven { url "https://dl.bintray.com/eaglesakura/maven/" }
     jcenter()
+    maven { url "https://dl.bintray.com/eaglesakura/maven/" }
 }
 apply plugin: 'java'
 
