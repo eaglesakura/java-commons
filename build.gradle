@@ -1,16 +1,7 @@
 /**
- * 1.0.0   : release
- * 1.0.1   : add Holder
- * 1.0.3   : add Disposable / mod IOUtil.close
- * 1.0.4   : add math package
- * 1.0.5   : 細かい修正
- * 1.0.6   : add MRT
- * 1.0.7   : 細かい機能追加
- * 1.1.x   : 自動デプロイに移行
- * 1.1.x   : リフレクション用Utilを追加
- * 1.2.x   : bintrayに移行
+ * 2.0.x   : リポジトリを変更
  */
-def ARTIFACT_VERSION = "1.2"
+def ARTIFACT_VERSION = "2.0"
 def REPOSITORY_NAME = "maven"
 def BINTRAY_LICENSES = ["MIT"]
 def BINTRAY_LABELS = ["android"]

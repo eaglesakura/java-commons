@@ -1,6 +1,5 @@
 package com.eaglesakura.util;
 
-import com.eaglesakura.io.Disposable;
 import com.eaglesakura.lambda.Action1;
 
 import java.io.BufferedReader;
@@ -13,7 +12,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.security.MessageDigest;
@@ -24,8 +22,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 /**
  * File関連の便利メソッドを提供する
@@ -94,7 +90,7 @@ public class IOUtil {
      * @param array 　変換元のint配列
      * @return コピーされたbyte配列
      */
-    public static final byte[] toByteArray(int[] array) {
+    public static byte[] toByteArray(int[] array) {
         byte[] result = new byte[array.length * 4];
         return toByteArray(array, result);
     }
@@ -107,7 +103,7 @@ public class IOUtil {
      * @param result 変換先のbyte配列
      * @return resultオブジェクト
      */
-    public static final byte[] toByteArray(int[] array, byte[] result) {
+    public static byte[] toByteArray(int[] array, byte[] result) {
         for (int i = 0; i < array.length; ++i) {
             result[i * 4 + 0] = (byte) ((array[i] >> 24) & 0xff);
             result[i * 4 + 1] = (byte) ((array[i] >> 16) & 0xff);
@@ -198,7 +194,7 @@ public class IOUtil {
      * @param src コピー元
      * @param dst コピー先
      */
-    public static final void copy(File src, File dst) throws IOException {
+    public static void copy(File src, File dst) throws IOException {
         mkdirs(dst.getParentFile());
         InputStream srcStream = null;
         OutputStream dstStream = null;
@@ -229,7 +225,7 @@ public class IOUtil {
      * @param src コピー元
      * @param dst コピー先
      */
-    public static final void copyOrUpdate(File src, File dst) throws IOException {
+    public static void copyOrUpdate(File src, File dst) throws IOException {
         if (!dst.isFile()) {
             // ファイルが存在しないからコピーする
             copy(src, dst);
@@ -267,16 +263,16 @@ public class IOUtil {
             is.close();
             byte[] digest = md.digest();
 
-            StringBuffer sBuffer = new StringBuffer(digest.length * 2);
+            StringBuilder builder = new StringBuilder(digest.length * 2);
             for (byte b : digest) {
                 String s = Integer.toHexString(((int) b) & 0xff);
 
                 if (s.length() == 1) {
-                    sBuffer.append('0');
+                    builder.append('0');
                 }
-                sBuffer.append(s);
+                builder.append(s);
             }
-            return sBuffer.toString();
+            return builder.toString();
         } catch (Exception e) {
             return null;
         } finally {
@@ -503,15 +499,6 @@ public class IOUtil {
 
     /**
      * そこまでの道を含めてディレクトリを作成する。
-     * {@link File#mkdirs()} を使用すべき
-     */
-    @Deprecated
-    public static File mkdir(File dir) {
-        return mkdirs(dir);
-    }
-
-    /**
-     * そこまでの道を含めてディレクトリを作成する。
      * File.mkdirsはvoid戻りなので、１行で呼べるようにする。
      */
     public static File mkdirs(File dir) {
@@ -636,185 +623,6 @@ public class IOUtil {
         }
     }
 
-    public interface OnMemoryDecompressCallback {
-        /**
-         * デコードキャンセルする場合はtrue
-         */
-        boolean isCanceled();
-
-        /**
-         * 指定したファイルを書き込むことを許可する
-         */
-        boolean isDecompressExist(long size, String path);
-
-        /**
-         * ファイルの解析が完了した
-         */
-        void onDecompressCompleted(String path, byte[] buffer);
-    }
-
-    /**
-     * InputStream経由でUnzipを行う
-     *
-     * @param stream   読み込み対象
-     * @param callback 処理決定用のコールバック
-     */
-    public static void unzip(InputStream stream, OnMemoryDecompressCallback callback) throws IOException {
-        ZipInputStream is = null;
-
-        try {
-            is = new ZipInputStream(stream);
-            byte[] buffer = new byte[1024 * 128];
-
-            ZipEntry entry;
-            while ((entry = is.getNextEntry()) != null && !callback.isCanceled()) {
-                String path = entry.getName();
-
-                if (!entry.isDirectory() && callback.isDecompressExist(entry.getSize(), path)) {
-                    // メモリに読み込む
-                    ByteArrayOutputStream os = null;
-                    try {
-                        os = new ByteArrayOutputStream((int) entry.getSize());
-                        int read;
-                        while ((read = is.read(buffer)) > 0) {
-                            os.write(buffer, 0, read);
-                            if (callback.isCanceled()) {
-                                throw new InterruptedIOException();
-                            }
-                        }
-                    } finally {
-                        IOUtil.close(os);
-                    }
-
-                    callback.onDecompressCompleted(path, os.toByteArray());
-                }
-            }
-        } finally {
-            IOUtil.close(is);
-        }
-    }
-
-    public interface DecompressCallback {
-        /**
-         * デコードキャンセルする場合はtrue
-         */
-        boolean isCanceled();
-
-        /**
-         * 指定したファイルを書き込むことを許可する
-         */
-        boolean isDecompressExist(long size, File dst);
-
-        /**
-         * ファイルの解析が完了した
-         */
-        void onDecompressCompleted(File dst);
-    }
-
-    /**
-     * InputStream経由でUnzipを行う
-     *
-     * @param stream       読み込み対象
-     * @param outDirectory 書き込み対象
-     * @param callback     処理決定用のコールバック
-     */
-    public static void unzip(InputStream stream, File outDirectory, DecompressCallback callback) throws IOException {
-        ZipInputStream is = null;
-
-        try {
-            is = new ZipInputStream(stream);
-            byte[] buffer = new byte[1024 * 128];
-
-            ZipEntry entry;
-            while ((entry = is.getNextEntry()) != null && !callback.isCanceled()) {
-                File outFile = outDirectory;
-                List<String> path = CollectionUtil.asList(entry.getName().split("/"));
-
-                // "/"で区切られていたら、パスを追加する
-                while (path.size() > 1) {
-                    outFile = new File(outFile, path.remove(0));
-                }
-
-                // パスを生成する
-                outFile.mkdirs();
-
-                // ファイル名を確定する
-                outFile = new File(outFile, path.get(0));
-                if (!entry.isDirectory() && callback.isDecompressExist(entry.getSize(), outFile)) {
-                    // ファイルへ書き込む
-                    FileOutputStream os = null;
-                    try {
-                        os = new FileOutputStream(outFile);
-                        int read;
-                        while ((read = is.read(buffer)) > 0) {
-                            os.write(buffer, 0, read);
-                            if (callback.isCanceled()) {
-                                throw new InterruptedIOException();
-                            }
-                        }
-                    } finally {
-                        IOUtil.close(os);
-                    }
-
-                    callback.onDecompressCompleted(outFile);
-                }
-            }
-        } finally {
-            IOUtil.close(is);
-        }
-    }
-
-    /**
-     * InputStream経由でUnzipを行う
-     *
-     * @param stream       読み込み対象
-     * @param outDirectory 書き込み対象
-     */
-    @Deprecated
-    public static void unzip(InputStream stream, File outDirectory) throws IOException {
-        ZipInputStream is = new ZipInputStream(stream);
-        ZipEntry entry;
-        while ((entry = is.getNextEntry()) != null) {
-            File outFile = outDirectory;
-            List<String> path = CollectionUtil.asList(entry.getName().split("/"));
-
-            // "/"で区切られていたら、パスを追加する
-            while (path.size() > 1) {
-                outFile = new File(outFile, path.remove(0));
-            }
-
-            // パスを生成する
-            outFile.mkdirs();
-
-            // ファイル名を確定する
-            outFile = new File(outFile, path.get(0));
-            if (!entry.isDirectory()) {
-                // ファイルへ書き込む
-                FileOutputStream os = new FileOutputStream(outFile);
-                copyTo(is, false, os, false);
-                os.close();
-            }
-        }
-    }
-
-    /**
-     * ZIPの解凍を行う
-     *
-     * @param zipFile      ZIPファイル
-     * @param outDirectory 解凍ディレクトリ
-     */
-    public static void unzip(File zipFile, File outDirectory) throws IOException {
-        InputStream is = new FileInputStream(zipFile);
-        try {
-            unzip(is, outDirectory);
-        } finally {
-            try {
-                is.close();
-            } catch (Exception e) {
-            }
-        }
-    }
-
     /**
      * リソースオブジェクトを必要に応じて閉じる
      * <p/>
@@ -832,23 +640,11 @@ public class IOUtil {
             if (obj instanceof Closeable) {
                 ((Closeable) obj).close();
                 return true;
-            } else if (obj instanceof Disposable) {
-                ((Disposable) obj).dispose();
-                return true;
             }
 
             try {
                 // 引数なしcloseメソッドを見つけたら自動で閉じる
                 Method method = obj.getClass().getMethod("close");
-                method.invoke(obj);
-                return true;
-            } catch (Exception e) {
-
-            }
-
-            try {
-                // 引数なしdisposeメソッドを見つけたら自動で閉じる
-                Method method = obj.getClass().getMethod("dispose");
                 method.invoke(obj);
                 return true;
             } catch (Exception e) {
