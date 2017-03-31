@@ -117,6 +117,10 @@ public class CollectionUtil {
      * Listの全オブジェクトに対して処理を行い、同一オブジェクトを返却する
      */
     public static <T> List<T> each(List<T> list, Action1<T> action) throws Throwable {
+        if (list == null || list.isEmpty()) {
+            return list;
+        }
+
         for (T it : list) {
             action.action(it);
         }
