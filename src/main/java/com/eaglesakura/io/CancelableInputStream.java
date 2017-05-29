@@ -52,7 +52,9 @@ public class CancelableInputStream extends InputStream {
     @Override
     public int read() throws IOException {
         byte[] buf = new byte[1];
-        read(buf, 0, 1);
+        if (read(buf, 0, 1) < 0) {
+            return -1;
+        }
         return ((int) buf[0]) & 0x000000FF;
     }
 
