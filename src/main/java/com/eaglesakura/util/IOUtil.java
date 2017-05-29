@@ -137,6 +137,7 @@ public class IOUtil {
             is = new FileInputStream(file);
             return toByteArray(is, true);
         } catch (Exception e) {
+        } finally {
             close(is);
         }
         return null;
@@ -154,6 +155,7 @@ public class IOUtil {
             is = new FileInputStream(file);
             return toString(is, true);
         } catch (Exception e) {
+        } finally {
             close(is);
         }
         return null;
