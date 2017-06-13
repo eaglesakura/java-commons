@@ -19,7 +19,7 @@ public class CollectionUtilTest {
     public void フィルタが正常に動作する() throws Throwable {
         List<Integer> filter = CollectionUtil.filter(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), new ArrayList<Integer>(), new Matcher1<Integer>() {
             @Override
-            public boolean match(Integer it) throws Throwable {
+            public boolean match(Integer it) throws Exception {
                 return (int) it == 10;
             }
         });

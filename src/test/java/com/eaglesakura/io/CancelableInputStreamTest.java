@@ -14,7 +14,7 @@ public class CancelableInputStreamTest {
     public void 適当なデータをすべて読み取れる() throws Throwable {
         CancelableInputStream is = new CancelableInputStream(new ByteArrayInputStream(new byte[256]), new CancelCallback() {
             @Override
-            public boolean isCanceled() throws Throwable {
+            public boolean isCanceled() throws Exception {
                 return false;
             }
         });
@@ -26,7 +26,7 @@ public class CancelableInputStreamTest {
     public void ゼロbyteのデータを読み取れる() throws Throwable {
         CancelableInputStream is = new CancelableInputStream(new ByteArrayInputStream(new byte[0]), new CancelCallback() {
             @Override
-            public boolean isCanceled() throws Throwable {
+            public boolean isCanceled() throws Exception {
                 return false;
             }
         });

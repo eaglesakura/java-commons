@@ -16,7 +16,7 @@ public class DataCollectionTest {
 
     final Matcher1 mFilter = new Matcher1() {
         @Override
-        public boolean match(Object it) throws Throwable {
+        public boolean match(Object it) throws Exception {
             return (int) it % 2 == 0;
         }
     };

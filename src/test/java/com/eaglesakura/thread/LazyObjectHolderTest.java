@@ -16,14 +16,14 @@ public class LazyObjectHolderTest {
     public void 遅延初期化が一度しか行われない() throws Throwable {
         LazyObjectHolder0<Object> holder0 = new LazyObjectHolder0<>(new ResultAction0<Object>() {
             @Override
-            public Object action() throws Throwable {
+            public Object action() throws Exception {
                 return new Object();
             }
         });
 
         LazyObjectHolder1<Object, Object> holder1 = new LazyObjectHolder1<>(new ResultAction1<Object, Object>() {
             @Override
-            public Object action(Object it) throws Throwable {
+            public Object action(Object it) throws Exception {
                 assertNotNull(it);
                 return new Object();
             }
@@ -31,7 +31,7 @@ public class LazyObjectHolderTest {
 
         LazyObjectHolder2<Object, Object, Object> holder2 = new LazyObjectHolder2<>(new ResultAction2<Object, Object, Object>() {
             @Override
-            public Object action(Object a, Object b) throws Throwable {
+            public Object action(Object a, Object b) throws Exception {
                 assertNotNull(a);
                 assertNotNull(b);
                 assertNotEquals(a, b);
