@@ -1,6 +1,7 @@
 /**
  * 2.0.x   : リポジトリを変更
  * 2.1.x   : リリース規則を変更
+ * 2.2.x   : ラムダ式サポートインターフェースの例外をThrowableからExceptionに変更
  */
 def ARTIFACT_VERSION = System.env.CIRCLE_TAG == null ?
         "2.1" : System.env.CIRCLE_TAG.substring(System.env.CIRCLE_TAG.indexOf('v') + 1)

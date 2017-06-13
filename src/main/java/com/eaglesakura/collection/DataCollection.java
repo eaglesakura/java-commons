@@ -48,9 +48,9 @@ public class DataCollection<T> {
      * 全てのデータに対して処理を行う
      *
      * @param action 処理内容
-     * @throws Throwable action内部で投げられた例外
+     * @throws Exception action内部で投げられた例外
      */
-    public void each(Action1<T> action) throws Throwable {
+    public void each(Action1<T> action) throws Exception {
         for (T data : mDataList) {
             action.action(data);
         }
@@ -60,7 +60,7 @@ public class DataCollection<T> {
     /**
      * インデックス付きでデータ処理を行う
      */
-    public void each(Action2<Integer, T> action) throws Throwable {
+    public void each(Action2<Integer, T> action) throws Exception {
         int index = 0;
         for (T data : mDataList) {
             action.action(index, data);
@@ -78,7 +78,7 @@ public class DataCollection<T> {
             for (T data : mDataList) {
                 action.action(data);
             }
-        } catch (Throwable e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -94,7 +94,7 @@ public class DataCollection<T> {
                 action.action(index, data);
                 ++index;
             }
-        } catch (Throwable e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -103,9 +103,9 @@ public class DataCollection<T> {
      * ソート後にデータに対して処理する
      *
      * @param action アクション
-     * @throws Throwable action内部の例外
+     * @throws Exception action内部の例外
      */
-    public void sortEach(Action1<T> action) throws Throwable {
+    public void sortEach(Action1<T> action) throws Exception {
         for (T data : list()) {
             action.action(data);
         }
@@ -117,7 +117,7 @@ public class DataCollection<T> {
      * @param action アクション
      * @throws Throwable action内部の例外
      */
-    public void sortEach(Action2<Integer, T> action) throws Throwable {
+    public void sortEach(Action2<Integer, T> action) throws Exception {
         int index = 0;
         for (T data : list()) {
             action.action(index, data);
@@ -138,7 +138,7 @@ public class DataCollection<T> {
                 action.action(index, data);
                 ++index;
             }
-        } catch (Throwable e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -183,7 +183,7 @@ public class DataCollection<T> {
     public List<T> list() {
         return list(new Matcher1<T>() {
             @Override
-            public boolean match(T it) throws Throwable {
+            public boolean match(T it) throws Exception {
                 return true;
             }
         }, true);
@@ -223,7 +223,7 @@ public class DataCollection<T> {
                 }
             }
             return null;
-        } catch (Throwable e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -242,7 +242,7 @@ public class DataCollection<T> {
                 }
             }
             return null;
-        } catch (Throwable e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -267,7 +267,7 @@ public class DataCollection<T> {
                 }
             }
             return null;
-        } catch (Throwable e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -294,7 +294,7 @@ public class DataCollection<T> {
                 sort(result);
             }
             return result;
-        } catch (Throwable e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

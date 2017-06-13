@@ -24,7 +24,7 @@ public class CollectionUtil {
      * @param execute 実行し、trueを返したオブジェクトについては削除する
      * @return 削除数
      */
-    public static <T> int eachRemove(Collection<T> srcdst, Matcher1<T> execute) throws Throwable {
+    public static <T> int eachRemove(Collection<T> srcdst, Matcher1<T> execute) throws Exception {
         int result = 0;
         Iterator<T> iterator = srcdst.iterator();
         while (iterator.hasNext()) {
@@ -46,7 +46,7 @@ public class CollectionUtil {
     public static <T> int safeEachRemove(Collection<T> srcdst, Matcher1<T> execute) {
         try {
             return eachRemove(srcdst, execute);
-        } catch (Throwable e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -59,7 +59,7 @@ public class CollectionUtil {
      * @param filter フィルタ関数
      * @return dstオブジェクト
      */
-    public static <T> List<T> filter(List<T> src, List<T> dst, Matcher1<T> filter) throws Throwable {
+    public static <T> List<T> filter(List<T> src, List<T> dst, Matcher1<T> filter) throws Exception {
         for (T it : src) {
             if (filter.match(it)) {
                 dst.add(it);
@@ -84,7 +84,7 @@ public class CollectionUtil {
     /**
      * Setの全オブジェクトに対して処理を行い、同一オブジェクトを返却する
      */
-    public static <T> Set<T> each(Set<T> set, Action1<T> action) throws Throwable {
+    public static <T> Set<T> each(Set<T> set, Action1<T> action) throws Exception {
         for (T it : set) {
             action.action(it);
         }
@@ -94,7 +94,7 @@ public class CollectionUtil {
     /**
      * Mapの全オブジェクトに対して処理を行い、同一オブジェクトを返却する
      */
-    public static <K, V> Map<K, V> each(Map<K, V> map, Action1<V> action) throws Throwable {
+    public static <K, V> Map<K, V> each(Map<K, V> map, Action1<V> action) throws Exception {
         for (V it : map.values()) {
             action.action(it);
         }
@@ -104,7 +104,7 @@ public class CollectionUtil {
     /**
      * Mapの全オブジェクトに対して処理を行い、同一オブジェクトを返却する
      */
-    public static <K, V> Map<K, V> each(Map<K, V> map, Action2<K, V> action) throws Throwable {
+    public static <K, V> Map<K, V> each(Map<K, V> map, Action2<K, V> action) throws Exception {
         Iterator<Map.Entry<K, V>> iterator = map.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<K, V> entry = iterator.next();
@@ -116,7 +116,7 @@ public class CollectionUtil {
     /**
      * Listの全オブジェクトに対して処理を行い、同一オブジェクトを返却する
      */
-    public static <T> List<T> each(List<T> list, Action1<T> action) throws Throwable {
+    public static <T> List<T> each(List<T> list, Action1<T> action) throws Exception {
         if (list == null || list.isEmpty()) {
             return list;
         }
@@ -140,7 +140,7 @@ public class CollectionUtil {
     public static <T> List<T> safeFilter(List<T> src, List<T> dst, Matcher1<T> filter) {
         try {
             return filter(src, dst, filter);
-        } catch (Throwable e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -151,7 +151,7 @@ public class CollectionUtil {
     public static <T> List<T> safeEach(List<T> list, Action1<T> action) {
         try {
             return each(list, action);
-        } catch (Throwable e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

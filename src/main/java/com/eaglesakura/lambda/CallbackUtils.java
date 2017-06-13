@@ -7,7 +7,7 @@ public class CallbackUtils {
         }
         try {
             return callback.isCanceled();
-        } catch (Throwable e) {
+        } catch (Exception e) {
             return true;
         }
     }
