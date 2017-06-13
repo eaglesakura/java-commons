@@ -4,7 +4,7 @@
  * 2.2.x   : ラムダ式サポートインターフェースの例外をThrowableからExceptionに変更
  */
 def ARTIFACT_VERSION = System.env.CIRCLE_TAG == null ?
-        "2.1" : System.env.CIRCLE_TAG.substring(System.env.CIRCLE_TAG.indexOf('v') + 1)
+        "2.2" : System.env.CIRCLE_TAG.substring(System.env.CIRCLE_TAG.indexOf('v') + 1)
 def REPOSITORY_NAME = "maven"
 def BINTRAY_LICENSES = ["MIT"]
 def BINTRAY_LABELS = ["android"]
