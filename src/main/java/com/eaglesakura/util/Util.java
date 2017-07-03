@@ -1,6 +1,8 @@
 package com.eaglesakura.util;
 
 import com.eaglesakura.lambda.Action1;
+import com.eaglesakura.lambda.CallbackUtils;
+import com.eaglesakura.lambda.CancelCallback;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -130,6 +132,31 @@ public class Util {
     }
 
     /**
+     * 指定時間が経過するまで、sleepを行う。
+     * ただし、キャンセル条件が満たされた場合、このメソッドは {@link InterruptedException} を投げて中断される。
+     */
+    public static void sleep(long timeMs, CancelCallback cancelCallback) throws InterruptedException {
+        if (timeMs <= 0) {
+            // sleep時間が0ならば何もする必要はない
+            return;
+        }
+
+        Timer timer = new Timer();
+        while (timer.end() < timeMs) {
+            try {
+                if (CallbackUtils.isCanceled(cancelCallback)) {
+                    throw new InterruptedException("canceled");
+                }
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new InterruptedException(e.getMessage());
+            }
+        }
+    }
+
+    /**
      * nano秒単位でsleepを行う
      */
     public static void nanosleep(long ms, int nano) {
@@ -228,8 +255,6 @@ public class Util {
 
     /**
      * Mapに変換する
-     *
-     * @see CollectionUtil#asMap(Collection, CollectionUtil.Converter)
      */
     public static <Key, Value> Map<Key, Value> asMap(Collection<Value> values, KeyCreator<Key, Value> keyCreator) {
         Map<Key, Value> result = new HashMap<>();
@@ -239,9 +264,6 @@ public class Util {
         return result;
     }
 
-    /**
-     * @see com.eaglesakura.util.CollectionUtil.Converter
-     */
     @Deprecated
     public interface KeyCreator<Key, Value> {
         Key createKey(Value value);
@@ -300,11 +322,6 @@ public class Util {
         R as(T origin);
     }
 
-    /**
-     * オブジェクトリストを別なオブジェクトに変換する
-     *
-     * @see CollectionUtil#asOtherList(Iterable, CollectionUtil.Converter)
-     */
     @Deprecated
     public static <T, R> List<R> convert(List<T> origin, ItemConverter<T, R> converter) {
         if (isEmpty(origin)) {
