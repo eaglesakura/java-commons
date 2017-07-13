@@ -77,6 +77,14 @@ public class Util {
         }
     }
 
+    public static boolean getBoolean(Boolean value, boolean defValue) {
+        if (value == null) {
+            return defValue;
+        } else {
+            return value;
+        }
+    }
+
     /**
      * 指定日の開始時刻を取得する
      */
