@@ -110,7 +110,7 @@ public class Util {
     @Deprecated
     public static Date getTodayStart() {
         final long oneDay = 1000 * 60 * 60 * 24;
-        long now = System.currentTimeMillis();
+        long now = DateUtil.currentTimeMillis();
 
         return new Date((now / oneDay) * oneDay);
     }

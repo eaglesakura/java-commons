@@ -1,8 +1,8 @@
 package com.eaglesakura.util;
 
 public class Timer {
-    protected long startTime = System.currentTimeMillis();
-    protected long endTime = System.currentTimeMillis();
+    protected long startTime = DateUtil.currentTimeMillis();
+    protected long endTime = DateUtil.currentTimeMillis();
 
     public Timer() {
 
@@ -23,7 +23,7 @@ public class Timer {
      * ストップウォッチを開始する。
      */
     public void start() {
-        startTime = System.currentTimeMillis();
+        startTime = DateUtil.currentTimeMillis();
         endTime = startTime;
     }
 
@@ -31,7 +31,7 @@ public class Timer {
      * ストップウォッチを停止し、時間をミリ秒で取得する。
      */
     public long end() {
-        endTime = System.currentTimeMillis();
+        endTime = DateUtil.currentTimeMillis();
         return endTime - startTime;
     }
 

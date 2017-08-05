@@ -1,5 +1,6 @@
 package com.eaglesakura.util;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Calendar;
@@ -10,6 +11,35 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class DateUtilTest {
+
+    @Before
+    public void setUp() throws Throwable {
+        DateUtil.setTimeFunction(new DateUtil.TimeFunction() {
+            @Override
+            public long currentTimeMillis() {
+                return System.currentTimeMillis();
+            }
+        });
+    }
+
+    @Test
+    public void 現在時刻をチェックする() throws Throwable {
+        long nowByDateUtil = DateUtil.currentTimeMillis();
+        long nowBySystem = System.currentTimeMillis();
+        assertEquals(nowByDateUtil, nowBySystem);
+    }
+
+    @Test
+    public void 現在時刻を上書きできる() throws Throwable {
+        DateUtil.setTimeFunction(new DateUtil.TimeFunction() {
+            @Override
+            public long currentTimeMillis() {
+                return 0;
+            }
+        });
+
+        assertEquals(DateUtil.currentTimeMillis(), 0);
+    }
 
     @Test
     public void タイムゾーンをチェックする() {
