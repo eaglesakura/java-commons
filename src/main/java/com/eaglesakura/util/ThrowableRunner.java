@@ -3,7 +3,7 @@ package com.eaglesakura.util;
 /**
  * Runnableをラップし、例外と戻り値を利用できるようにする。
  */
-public class ThrowableRunner<ResultType, ErrorType extends Throwable> implements Runnable {
+public class ThrowableRunner<ResultType, ErrorType extends Exception> implements Runnable {
     /**
      * 投げられた例外
      */
@@ -27,7 +27,7 @@ public class ThrowableRunner<ResultType, ErrorType extends Throwable> implements
     public final void run() {
         try {
             mResult = mRunner.run();
-        } catch (Throwable e) {
+        } catch (Exception e) {
             mError = (ErrorType) e;
         }
     }
@@ -47,6 +47,33 @@ public class ThrowableRunner<ResultType, ErrorType extends Throwable> implements
     }
 
     /**
+     * 値を取得できるか例外が投げられるまで待つ
+     */
+    public ResultType safeAwait() {
+        try {
+            return await();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public boolean hasError() {
+        return mError != null;
+    }
+
+    public ErrorType getError() {
+        return mError;
+    }
+
+    public ResultType getResult() {
+        return mResult;
+    }
+
+    public boolean hasResult() {
+        return mResult != null;
+    }
+
+    /**
      * 値を取得するか例外を投げる
      */
     public ResultType getOrThrow() throws ErrorType {
@@ -54,5 +81,16 @@ public class ThrowableRunner<ResultType, ErrorType extends Throwable> implements
             throw mError;
         }
         return mResult;
+    }
+
+    /**
+     * インスタンスを生成する
+     *
+     * @param runner       実行アクション
+     * @param <ResultType> 戻り値
+     * @param <ErrorType>  エラー
+     */
+    public static <ResultType, ErrorType extends Exception> ThrowableRunner<ResultType, ErrorType> newInstance(ThrowableRunnable<ResultType, ErrorType> runner) {
+        return new ThrowableRunner<>(runner);
     }
 }

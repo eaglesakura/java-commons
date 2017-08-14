@@ -77,6 +77,14 @@ public class Util {
         }
     }
 
+    public static boolean getBoolean(Boolean value, boolean defValue) {
+        if (value == null) {
+            return defValue;
+        } else {
+            return value;
+        }
+    }
+
     /**
      * 指定日の開始時刻を取得する
      */
@@ -102,7 +110,7 @@ public class Util {
     @Deprecated
     public static Date getTodayStart() {
         final long oneDay = 1000 * 60 * 60 * 24;
-        long now = System.currentTimeMillis();
+        long now = DateUtil.currentTimeMillis();
 
         return new Date((now / oneDay) * oneDay);
     }

@@ -18,6 +18,33 @@ public class DateUtil {
         return ISO8601.format(date);
     }
 
+    public interface TimeFunction {
+        long currentTimeMillis();
+    }
+
+    private static TimeFunction sTimeFunction = new TimeFunction() {
+        @Override
+        public long currentTimeMillis() {
+            return System.currentTimeMillis();
+        }
+    };
+
+    /**
+     * 現在時刻取得用関数インターフェースを更新する
+     * @param timeFunction
+     */
+    public static void setTimeFunction(TimeFunction timeFunction) {
+        sTimeFunction = timeFunction;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static long currentTimeMillis() {
+        return sTimeFunction.currentTimeMillis();
+    }
+
     /**
      * ISO8601形式 "2016-04-18T20:30:24" をパースする
      */
