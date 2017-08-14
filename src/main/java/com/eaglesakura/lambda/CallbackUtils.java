@@ -9,7 +9,7 @@ public class CallbackUtils {
      * <p>
      * 途中でキャンセルされた場合は例外を投げて終了される
      */
-    public void waitTime(long timeMs, CancelCallback cancelCallback) throws InterruptedException {
+    public static void waitTime(long timeMs, CancelCallback cancelCallback) throws InterruptedException {
         if (timeMs <= 0) {
             return;
         }
