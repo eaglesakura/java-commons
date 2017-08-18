@@ -224,4 +224,32 @@ public class MathUtil {
         double temp = Double.valueOf(value);
         return Double.valueOf(String.format(format, temp));
     }
+
+    /**
+     * シンプルな加重平均を求める。
+     *
+     * indexの0に近い値ほど採用されるウェイトは高くなる
+     *
+     * @param values 合計する値
+     * @param decay  減衰値（インデックス1以降はこの値がウェイトに乗算される）, ex = 0.25
+     */
+    public static double weightedAverage(Iterable<Double> values, double decay) {
+        double weightSum = 0.0;
+        double weight = 1.0;
+
+        // ウェイトの合計値を求める
+        for (double value : values) {
+            weightSum += weight;
+            weight *= decay;
+        }
+
+        // ウェイトに比例した値を加算する
+        double result = 0;
+        weight = 1.0;
+        for (double value : values) {
+            result += value * (weight / weightSum);
+            weight *= decay;
+        }
+        return result;
+    }
 }
