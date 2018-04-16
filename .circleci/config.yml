@@ -10,7 +10,6 @@ jobs:
           CIRCLE_ARTIFACTS: /tmp/artifacts
           CIRCLE_TEST_REPORTS: /tmp/artifacts/test-results
           TERM: dumb
-        working_directory: /work/java-commons
     steps:
       - checkout
       - restore_cache:

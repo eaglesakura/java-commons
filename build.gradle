@@ -3,6 +3,7 @@
  * 2.1.x   : リリース規則を変更
  * 2.2.x   : ラムダ式サポートインターフェースの例外をThrowableからExceptionに変更
  */
+def ARTIFACT_NAME = "java-commons"
 def ARTIFACT_VERSION = System.env.CIRCLE_TAG == null ?
         "2.2" : System.env.CIRCLE_TAG.substring(System.env.CIRCLE_TAG.indexOf('v') + 1)
 def REPOSITORY_NAME = "maven"
@@ -95,10 +96,10 @@ bintray {
     key = BINTRAY_API_KEY
     pkg {
         repo = REPOSITORY_NAME
-        name = file(".").absoluteFile.name
+        name = ARTIFACT_NAME
         licenses = BINTRAY_LICENSES
         labels = BINTRAY_LABELS
-        issueTrackerUrl = "https://github.com/eaglesakura/${file(".").absoluteFile.name}/issues"
+        issueTrackerUrl = "https://github.com/eaglesakura/${ARTIFACT_NAME}/issues"
         vcsUrl = "https://github.com/eaglesakura/${file(".").absoluteFile.name}"
         version {
             name = project.version
