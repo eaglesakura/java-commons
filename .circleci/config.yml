@@ -1,0 +1,39 @@
+version: 2
+jobs:
+  build-full:
+    docker:
+      - image: gcr.io/eaglesakura-container/ci/java:1.8.0
+        auth:
+          username: _json_key
+          password: $GCLOUD_JSON_KEY
+        environment:
+          CIRCLE_ARTIFACTS: /tmp/artifacts
+          CIRCLE_TEST_REPORTS: /tmp/artifacts/test-results
+          TERM: dumb
+        working_directory: /work/java-commons
+    steps:
+      - checkout
+      - restore_cache:
+          key: jars-{{ checksum ".circleci/config.yml" }}
+      - run:
+          name: setup
+          command: chmod +x -R .circleci/scripts
+      - run:
+          name: test
+          command: .circleci/scripts/test.sh
+      - run:
+          name: deploy
+          command: ./gradlew bintrayUpload
+      - save_cache:
+          paths: ~/.gradle
+          key: jars-{{ checksum ".circleci/config.yml" }}
+      - store_artifacts:
+          path: /tmp/artifacts
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build-full:
+          filters:
+            tags:
+              only: /.*/

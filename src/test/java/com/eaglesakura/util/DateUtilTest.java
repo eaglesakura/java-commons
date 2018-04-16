@@ -50,7 +50,7 @@ public class DateUtilTest {
     }
 
     void checkDate(String dateString, int year, int month, int day) {
-        Date date = DateUtil.parseDateISO8601(dateString, TimeZone.getDefault());
+        Date date = DateUtil.parseDateISO8601(dateString, TimeZone.getTimeZone("Asia/Tokyo"));
         assertNotNull(date);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
